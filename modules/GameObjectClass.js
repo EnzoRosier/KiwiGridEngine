@@ -1,4 +1,4 @@
-export class GameObject {
+class GameObject {
     constructor(name) {
         this.name = name;
     }
@@ -7,3 +7,5 @@ export class GameObject {
       return this.name;
     }
 }
+
+export {GameObject};

@@ -1,7 +1,7 @@
-import {GameObject} from './KiwiEnginesTools/GameObjectClass.js';
+import {GameObject} from './modules/GameObjectClass.js';
 
 let allObjects = [];
 
-allObjects.push(new myModule.GameObject("test"));
+allObjects.push(new GameObject("test"));
 
-allObjects[0].getObjectName();
+console.log(allObjects[0].getObjectName());
