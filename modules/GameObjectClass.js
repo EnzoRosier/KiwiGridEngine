@@ -65,6 +65,7 @@ class Sprite {
      * @memberof Sprite
      */
     render(pos, ctx) {
+        ctx.imageSmoothingEnabled= false
         // On check si l'image du Sprite est chargée par le navigateur
         if (this.img.complete) { // Si oui on affiche directement
             ctx.drawImage(this.img, pos[0], pos[1], this.size_X, this.size_Y);
