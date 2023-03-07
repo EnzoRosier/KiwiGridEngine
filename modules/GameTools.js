@@ -1,10 +1,8 @@
 import { GameObject } from "./GameObjectClass.js";
 
-
-
 var dpi = window.devicePixelRatio;
-var canvas = document.getElementById('gameWindow');
-var ctx = canvas.getContext('2d');
+var canvas = document.getElementById("gameWindow");
+var ctx = canvas.getContext("2d");
 
 /**
  * Affiche tout les GameObjects contenus dans une liste
@@ -12,9 +10,8 @@ var ctx = canvas.getContext('2d');
  * @param {GameObject[]} ObjectList Liste de GameObject
  */
 function refreshScreen(ObjectList) {
-    
-    fix_dpi() //On règle le dpi
-    ObjectList.forEach(val => {
+    fix_dpi(); //On règle le dpi
+    ObjectList.forEach((val) => {
         val.renderObject(ctx);
     });
 }
@@ -25,12 +22,16 @@ function refreshScreen(ObjectList) {
  */
 function fix_dpi() {
     //get CSS height
-    let style_height = +getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
+    let style_height = +getComputedStyle(canvas)
+        .getPropertyValue("height")
+        .slice(0, -2);
     //get CSS width
-    let style_width = +getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
+    let style_width = +getComputedStyle(canvas)
+        .getPropertyValue("width")
+        .slice(0, -2);
     //scale the canvas
-    canvas.setAttribute('height', style_height * dpi);
-    canvas.setAttribute('width', style_width * dpi);
+    canvas.setAttribute("height", style_height * dpi);
+    canvas.setAttribute("width", style_width * dpi);
 }
 
 export { refreshScreen };

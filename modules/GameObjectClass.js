@@ -20,7 +20,7 @@ class GameObject {
     }
     /**
      * Renvoie le nom du GameObject
-     * @return {string} nom du GameObject 
+     * @return {string} nom du GameObject
      * @memberof GameObject
      */
     getObjectName() {
@@ -28,8 +28,17 @@ class GameObject {
     }
 
     /**
+     * Renvoie la position du GameObject
+     * @return {int[]}
+     * @memberof GameObject
+     */
+    getObjectPos() {
+        return [this.pos_X, this.pos_Y];
+    }
+
+    /**
      * Affiche le gameObject dans le contexte ctx
-     * @param {CanvasRenderingContext2D} ctx 
+     * @param {CanvasRenderingContext2D} ctx
      */
     renderObject(ctx) {
         this.sprite.render([this.pos_X, this.pos_Y], ctx);
@@ -65,18 +74,57 @@ class Sprite {
      * @memberof Sprite
      */
     render(pos, ctx) {
-        ctx.imageSmoothingEnabled= false
+        ctx.imageSmoothingEnabled = false;
         // On check si l'image du Sprite est chargée par le navigateur
-        if (this.img.complete) { // Si oui on affiche directement
+        if (this.img.complete) {
+            // Si oui on affiche directement
             ctx.drawImage(this.img, pos[0], pos[1], this.size_X, this.size_Y);
-        } else { // Si non
-            this.img.onload = (event) => { // On attend que l'image soit chargée
-                ctx.drawImage(this.img, pos[0], pos[1], this.size_X, this.size_Y);
-            }
+        } else {
+            // Si non
+            this.img.onload = (event) => {
+                // On attend que l'image soit chargée
+                ctx.drawImage(
+                    this.img,
+                    pos[0],
+                    pos[1],
+                    this.size_X,
+                    this.size_Y
+                );
+            };
         }
     }
 }
 
-export { GameObject, Sprite };
+class SpriteAnimation {
+    /**
+     * Creates an instance of SpriteAnimation.
+     * @param {string} spriteSheet_URL
+     * @param {int[]} size_XY
+     * @param {int[]} FrameSize_XY
+     * @param {int} nbFrame
+     * @memberof SpriteAnimation
+     */
+    constructor(spriteSheet_URL, size_XY, frameSize_XY, nbFrame) {
+        this.img = new Image();
+        this.img.src = spriteSheet_URL;
+        this.size_X = size_XY[0];
+        this.size_Y = size_XY[1];
+        this.frameSize_X = frameSize_XY[0];
+        this.frameSize_Y = frameSize_XY[1];
+        this.nbFrame = nbFrame;
+    }
+
+    render(pos, ctx) {
+
+    }
+
+    drawFrame(frameX, frameY, canvasX, canvasY) {
+        ctx.drawImage(img,
+                      frameX * width, frameY * height, width, height,
+                      canvasX, canvasY, scaledWidth, scaledHeight);
+      }
+}
+
+export { GameObject, Sprite, SpriteAnimation };
 
 //#endregion
