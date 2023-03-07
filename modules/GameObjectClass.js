@@ -9,7 +9,7 @@ class GameObject {
      * Creates an instance of GameObject.
      * @param {string} name nom de l'objet
      * @param {int[]} pos position x puis y de l'objet
-     * @param {Sprite} sprite_url Sprite du GameObject
+     * @param {Sprite|SpriteAnimation} sprite_url Sprite du GameObject
      * @memberof GameObject
      */
     constructor(name, pos, sprite) {
@@ -41,6 +41,11 @@ class GameObject {
      * @param {CanvasRenderingContext2D} ctx
      */
     renderObject(ctx) {
+        /*if (typeof(this.sprite) === Sprite) {
+            this.sprite.render([this.pos_X, this.pos_Y], ctx);
+        } else if (typeof(this.sprite) === SpriteAnimation) {
+            this.sprite.render([this.pos_X, this.pos_Y], ctx);
+        }*/
         this.sprite.render([this.pos_X, this.pos_Y], ctx);
     }
 }
@@ -114,15 +119,87 @@ class SpriteAnimation {
         this.nbFrame = nbFrame;
     }
 
+    /**
+     * Fonction Affichant l'animation
+     *
+     * @param {int[]} pos position [X, Y]
+     * @param {CanvasRenderingContext2D} ctx
+     * @memberof SpriteAnimation
+     */
     render(pos, ctx) {
-
+        ctx.imageSmoothingEnabled = false;
+        if (this.img.complete) {
+            // Si oui on affiche directement
+            window.requestAnimationFrame(
+                function () {
+                    this.step(pos, ctx, this.nbFrame, 0);
+                }.bind(this),
+                this.nbFrame
+            );
+        } else {
+            this.img.onload = (event) => {
+                window.requestAnimationFrame(
+                    function () {
+                        this.step(pos, ctx, this.nbFrame, 0);
+                    }.bind(this),
+                    this.nbFrame
+                );
+            };
+        }
+    }
+    /**
+     * Fonction permettant de décidé la frame à afficher ensuite
+     * @param {int[]} pos
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {int} counter
+     * @param {int} frameCount
+     */
+    step(pos, ctx, counter, frameCount) {
+        frameCount++;
+        if (frameCount < 15) {
+            window.requestAnimationFrame(function () {
+                this.step(pos, ctx, counter, frameCount);
+            }.bind(this), counter);
+            return;
+        }
+        frameCount = 0;
+        ctx.clearRect(pos[0], pos[1], this.size_X, this.size_Y);
+        this.drawFrame(counter, 0, pos, ctx);
+        counter++;
+        if (counter >= this.nbFrame) {
+            counter = 0;
+            window.requestAnimationFrame(function () {
+                this.step(pos, ctx, counter, frameCount);
+            }.bind(this), counter);
+            return;
+        }
+        window.requestAnimationFrame(function () {
+            this.step(pos, ctx, counter, frameCount);
+        }.bind(this), counter);
     }
 
-    drawFrame(frameX, frameY, canvasX, canvasY) {
-        ctx.drawImage(img,
-                      frameX * width, frameY * height, width, height,
-                      canvasX, canvasY, scaledWidth, scaledHeight);
-      }
+    /**
+     * Affiche une frame de l'animation
+     *
+     * @param {int} frameX
+     * @param {int} frameY
+     * @param {int[]} pos_XY
+     * @param {CanvasRenderingContext2D} ctx
+     * @memberof SpriteAnimation
+     */
+    drawFrame(frameX, frameY, pos_XY, ctx) {
+        ctx.drawImage(
+            this.img,
+            frameX * this.frameSize_X,
+            frameY * this.frameSize_Y,
+            this.frameSize_X,
+            this.frameSize_Y,
+            pos_XY[0],
+            pos_XY[1],
+            this.size_X,
+            this.size_Y
+        );
+    }
 }
 
 export { GameObject, Sprite, SpriteAnimation };
