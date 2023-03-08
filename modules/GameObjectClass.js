@@ -9,14 +9,14 @@ class GameObject {
      * Creates an instance of GameObject.
      * @param {string} name nom de l'objet
      * @param {int[]} pos position x puis y de l'objet
-     * @param {Sprite|SpriteAnimation} sprite_url Sprite du GameObject
      * @memberof GameObject
      */
-    constructor(name, pos, sprite) {
+    constructor(name, pos) {
         this.name = name;
         this.pos_X = pos[0];
         this.pos_Y = pos[1];
-        this.sprite = sprite;
+        this.spritesCollection = {};
+        this.currSprite = null;
     }
     /**
      * Renvoie le nom du GameObject
@@ -37,16 +37,50 @@ class GameObject {
     }
 
     /**
+     * Change le sprite du GameObject à afficher
+     *
+     * @param {string} name
+     * @memberof GameObject
+     */
+    setCurrentSprite(name) {
+        this.currSprite = name;
+    }
+
+    /**
+     * Ajoute un Sprite ou une Animation dans la collection
+     * d'affichage possible
+     * @param {string} name
+     * @param {Sprite|SpriteAnimation} sprite
+     * @memberof GameObject
+     */
+    addToSpriteCollection(name, sprite) {
+        this.spritesCollection[name] = sprite;
+    }
+
+    /**
      * Affiche le gameObject dans le contexte ctx
      * @param {CanvasRenderingContext2D} ctx
      */
     renderObject(ctx) {
-        /*if (typeof(this.sprite) === Sprite) {
-            this.sprite.render([this.pos_X, this.pos_Y], ctx);
-        } else if (typeof(this.sprite) === SpriteAnimation) {
-            this.sprite.render([this.pos_X, this.pos_Y], ctx);
-        }*/
-        this.sprite.render([this.pos_X, this.pos_Y], ctx);
+        if (this.currSprite != null) {
+            this.spritesCollection[this.currSprite].render(
+                [this.pos_X, this.pos_Y],
+                ctx
+            );
+        }
+    }
+
+    /**
+     *
+     * Stop currentAnimation
+     * @memberof GameObject
+     */
+    stopRender() {
+        if (
+            this.spritesCollection[this.currSprite] instanceof SpriteAnimation
+        ) {
+            this.spritesCollection[this.currSprite].stopRender();
+        }
     }
 }
 //#endregion
@@ -86,7 +120,7 @@ class Sprite {
             ctx.drawImage(this.img, pos[0], pos[1], this.size_X, this.size_Y);
         } else {
             // Si non
-            this.img.onload = (event) => {
+            this.img.addEventListener("load",(event) => {
                 // On attend que l'image soit chargée
                 ctx.drawImage(
                     this.img,
@@ -95,7 +129,7 @@ class Sprite {
                     this.size_X,
                     this.size_Y
                 );
-            };
+            });
         }
     }
 }
@@ -117,6 +151,7 @@ class SpriteAnimation {
         this.frameSize_X = frameSize_XY[0];
         this.frameSize_Y = frameSize_XY[1];
         this.nbFrame = nbFrame;
+        this.requestID = undefined;
     }
 
     /**
@@ -127,24 +162,26 @@ class SpriteAnimation {
      * @memberof SpriteAnimation
      */
     render(pos, ctx) {
-        ctx.imageSmoothingEnabled = false;
-        if (this.img.complete) {
-            // Si oui on affiche directement
-            window.requestAnimationFrame(
-                function () {
-                    this.step(pos, ctx, this.nbFrame, 0);
-                }.bind(this),
-                this.nbFrame
-            );
-        } else {
-            this.img.onload = (event) => {
-                window.requestAnimationFrame(
+        if (!this.requestID) {
+            ctx.imageSmoothingEnabled = false;
+            if (this.img.complete) {
+                // Si oui on affiche directement
+                this.requestID = window.requestAnimationFrame(
                     function () {
                         this.step(pos, ctx, this.nbFrame, 0);
                     }.bind(this),
                     this.nbFrame
                 );
-            };
+            } else {
+                this.img.addEventListener("load", (event) => {
+                    this.requestID = window.requestAnimationFrame(
+                        function () {
+                            this.step(pos, ctx, this.nbFrame, 0);
+                        }.bind(this),
+                        this.nbFrame
+                    );
+                });
+            }
         }
     }
     /**
@@ -155,11 +192,15 @@ class SpriteAnimation {
      * @param {int} frameCount
      */
     step(pos, ctx, counter, frameCount) {
+        this.requestID = undefined;
         frameCount++;
         if (frameCount < 15) {
-            window.requestAnimationFrame(function () {
-                this.step(pos, ctx, counter, frameCount);
-            }.bind(this), counter);
+            this.requestID = window.requestAnimationFrame(
+                function () {
+                    this.step(pos, ctx, counter, frameCount);
+                }.bind(this),
+                counter
+            );
             return;
         }
         frameCount = 0;
@@ -168,14 +209,20 @@ class SpriteAnimation {
         counter++;
         if (counter >= this.nbFrame) {
             counter = 0;
-            window.requestAnimationFrame(function () {
-                this.step(pos, ctx, counter, frameCount);
-            }.bind(this), counter);
+            this.requestID = window.requestAnimationFrame(
+                function () {
+                    this.step(pos, ctx, counter, frameCount);
+                }.bind(this),
+                counter
+            );
             return;
         }
-        window.requestAnimationFrame(function () {
-            this.step(pos, ctx, counter, frameCount);
-        }.bind(this), counter);
+        this.requestID = window.requestAnimationFrame(
+            function () {
+                this.step(pos, ctx, counter, frameCount);
+            }.bind(this),
+            counter
+        );
     }
 
     /**
@@ -199,6 +246,13 @@ class SpriteAnimation {
             this.size_X,
             this.size_Y
         );
+    }
+
+    stopRender() {
+        if (this.requestID) {
+            window.cancelAnimationFrame(this.requestId);
+            this.requestId = undefined;
+        }
     }
 }
 

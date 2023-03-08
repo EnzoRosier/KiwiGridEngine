@@ -10,6 +10,7 @@ var ctx = canvas.getContext("2d");
  * @param {GameObject[]} ObjectList Liste de GameObject
  */
 function refreshScreen(ObjectList) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     fix_dpi(); //On règle le dpi
     ObjectList.forEach((val) => {
         val.renderObject(ctx);
