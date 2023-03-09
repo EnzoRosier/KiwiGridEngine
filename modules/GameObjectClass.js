@@ -16,7 +16,7 @@ class GameObject {
         this.pos_X = pos[0];
         this.pos_Y = pos[1];
         this.spritesCollection = {};
-        this.currSprite = null;
+        this.currSprite = undefined;
     }
     /**
      * Renvoie le nom du GameObject
@@ -43,7 +43,7 @@ class GameObject {
      * @memberof GameObject
      */
     setCurrentSprite(name) {
-        this.currSprite = name;
+        this.currSprite = this.spritesCollection[name];
     }
 
     /**
@@ -54,7 +54,16 @@ class GameObject {
      * @memberof GameObject
      */
     addToSpriteCollection(name, sprite) {
-        this.spritesCollection[name] = sprite;
+        if (sprite instanceof Sprite) {
+            this.spritesCollection[name] = new Sprite(sprite.imgUrl, [sprite.size_X, sprite.size_Y]);
+        } else {
+            this.spritesCollection[name] = new SpriteAnimation(
+                sprite.imgUrl,
+                [sprite.frameSize_X, sprite.frameSize_Y],
+                [sprite.frameSize_X, sprite.frameSize_Y],
+                sprite.nbFrame
+            );
+        }
     }
 
     /**
@@ -62,8 +71,8 @@ class GameObject {
      * @param {CanvasRenderingContext2D} ctx
      */
     renderObject(ctx) {
-        if (this.currSprite != null) {
-            this.spritesCollection[this.currSprite].render(
+        if (this.currSprite != undefined) {
+            this.currSprite.render(
                 [this.pos_X, this.pos_Y],
                 ctx
             );
@@ -77,9 +86,10 @@ class GameObject {
      */
     stopRender() {
         if (
-            this.spritesCollection[this.currSprite] instanceof SpriteAnimation
+            this.currSprite instanceof SpriteAnimation
         ) {
-            this.spritesCollection[this.currSprite].stopRender();
+            this.currSprite.stopRender();
+            this.currSprite.c
         }
     }
 }
@@ -103,6 +113,7 @@ class Sprite {
         this.size_Y = size_XY[1];
         this.img = new Image();
         this.img.src = sprite_URL;
+        this.imgUrl = sprite_URL;
     }
 
     /**
@@ -117,17 +128,17 @@ class Sprite {
         // On check si l'image du Sprite est chargée par le navigateur
         if (this.img.complete) {
             // Si oui on affiche directement
-            ctx.drawImage(this.img, pos[0], pos[1], this.size_X, this.size_Y);
+            ctx.drawImage(this.img, pos[0] * 4, pos[1] * 4, this.size_X * 4, this.size_Y * 4);
         } else {
             // Si non
-            this.img.addEventListener("load",(event) => {
+            this.img.addEventListener("load", (event) => {
                 // On attend que l'image soit chargée
                 ctx.drawImage(
                     this.img,
-                    pos[0],
-                    pos[1],
-                    this.size_X,
-                    this.size_Y
+                    pos[0] * 4,
+                    pos[1] * 4,
+                    this.size_X * 4,
+                    this.size_Y * 4
                 );
             });
         }
@@ -146,6 +157,7 @@ class SpriteAnimation {
     constructor(spriteSheet_URL, size_XY, frameSize_XY, nbFrame) {
         this.img = new Image();
         this.img.src = spriteSheet_URL;
+        this.imgUrl = spriteSheet_URL;
         this.size_X = size_XY[0];
         this.size_Y = size_XY[1];
         this.frameSize_X = frameSize_XY[0];
@@ -204,7 +216,7 @@ class SpriteAnimation {
             return;
         }
         frameCount = 0;
-        ctx.clearRect(pos[0], pos[1], this.size_X, this.size_Y);
+        ctx.clearRect(pos[0] * 4, pos[1] * 4, this.size_X * 4, this.size_Y * 4);
         this.drawFrame(counter, 0, pos, ctx);
         counter++;
         if (counter >= this.nbFrame) {
@@ -235,16 +247,17 @@ class SpriteAnimation {
      * @memberof SpriteAnimation
      */
     drawFrame(frameX, frameY, pos_XY, ctx) {
+        
         ctx.drawImage(
             this.img,
             frameX * this.frameSize_X,
             frameY * this.frameSize_Y,
             this.frameSize_X,
             this.frameSize_Y,
-            pos_XY[0],
-            pos_XY[1],
-            this.size_X,
-            this.size_Y
+            pos_XY[0] * 4,
+            pos_XY[1] * 4,
+            this.size_X * 4,
+            this.size_Y * 4
         );
     }
 

@@ -13,6 +13,8 @@ function refreshScreen(ObjectList) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     fix_dpi(); //On règle le dpi
     ObjectList.forEach((val) => {
+        val.stopRender()
+        ctx.imageSmoothingEnabled = false;
         val.renderObject(ctx);
     });
 }
