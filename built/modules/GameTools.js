@@ -34,3 +34,4 @@ function fix_dpi() {
     canvas.setAttribute("width", (style_width * dpi).toString(10));
 }
 export { refreshScreen };
+//# sourceMappingURL=GameTools.js.map

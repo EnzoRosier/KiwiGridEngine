@@ -41,6 +41,7 @@ class GameObject {
      * @memberof GameObject
      */
     setCurrentSprite(name) {
+        this.stopRender();
         this.currSprite = this.spritesCollection[name];
     }
     /**
@@ -175,7 +176,7 @@ class SpriteAnimation {
      * @param {int} frameCount
      */
     step(pos, ctx, counter, frameCount) {
-        this.requestID = undefined;
+        //this.requestID = undefined;
         frameCount++;
         if (frameCount < 15) {
             this.requestID = window.requestAnimationFrame(function () {
@@ -219,3 +220,4 @@ class SpriteAnimation {
 }
 export { GameObject, Sprite, SpriteAnimation };
 //#endregion
+//# sourceMappingURL=GameObjectClass.js.map
