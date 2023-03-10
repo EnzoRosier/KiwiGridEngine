@@ -1,8 +1,7 @@
 {
     "compilerOptions": {
       "outDir": "./built",
-      "allowJs": true,
-      "module": "commonjs",
+      //"module": "commonjs",
       "target": "ES6"
     },
     "include": ["./src/**/*"]

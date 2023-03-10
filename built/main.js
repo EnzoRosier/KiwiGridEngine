@@ -1,9 +1,5 @@
-/*import {
-    GameObject,
-    Sprite,
-    SpriteAnimation,
-} from "./../modules/GameObjectClass.js";
-import { refreshScreen } from "./../modules/GameTools.js";*/
+import { GameObject, Sprite, SpriteAnimation, } from "./modules/GameObjectClass.js";
+import { refreshScreen } from "./modules/GameTools.js";
 let allObjects = [];
 let spriteA = new Sprite("./../ressources/Test_SimpleSprite.png", [16, 16]);
 let spriteB = new SpriteAnimation("./../ressources/Test_SpriteSheet.png", [16, 16], [16, 16], 7);

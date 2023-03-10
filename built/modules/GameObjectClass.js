@@ -15,7 +15,7 @@ class GameObject {
         this.name = name;
         this.pos_X = pos[0];
         this.pos_Y = pos[1];
-        this.spritesCollection = {};
+        this.spritesCollection = new Map();
         this.currSprite = undefined;
     }
     /**
@@ -75,7 +75,6 @@ class GameObject {
     stopRender() {
         if (this.currSprite instanceof SpriteAnimation) {
             this.currSprite.stopRender();
-            this.currSprite.c;
         }
     }
 }
@@ -157,13 +156,13 @@ class SpriteAnimation {
                 // Si oui on affiche directement
                 this.requestID = window.requestAnimationFrame(function () {
                     this.step(pos, ctx, this.nbFrame, 0);
-                }.bind(this), this.nbFrame);
+                }.bind(this));
             }
             else {
                 this.img.addEventListener("load", (event) => {
                     this.requestID = window.requestAnimationFrame(function () {
                         this.step(pos, ctx, this.nbFrame, 0);
-                    }.bind(this), this.nbFrame);
+                    }.bind(this));
                 });
             }
         }
@@ -181,7 +180,7 @@ class SpriteAnimation {
         if (frameCount < 15) {
             this.requestID = window.requestAnimationFrame(function () {
                 this.step(pos, ctx, counter, frameCount);
-            }.bind(this), counter);
+            }.bind(this));
             return;
         }
         frameCount = 0;
@@ -192,12 +191,12 @@ class SpriteAnimation {
             counter = 0;
             this.requestID = window.requestAnimationFrame(function () {
                 this.step(pos, ctx, counter, frameCount);
-            }.bind(this), counter);
+            }.bind(this));
             return;
         }
         this.requestID = window.requestAnimationFrame(function () {
             this.step(pos, ctx, counter, frameCount);
-        }.bind(this), counter);
+        }.bind(this));
     }
     /**
      * Affiche une frame de l'animation
@@ -213,10 +212,10 @@ class SpriteAnimation {
     }
     stopRender() {
         if (this.requestID) {
-            window.cancelAnimationFrame(this.requestId);
-            this.requestId = undefined;
+            window.cancelAnimationFrame(this.requestID);
+            this.requestID = undefined;
         }
     }
 }
-//export { GameObject, Sprite, SpriteAnimation };
+export { GameObject, Sprite, SpriteAnimation };
 //#endregion

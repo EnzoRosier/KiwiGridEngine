@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const GameObjectClass_js_1 = require("./GameObjectClass.js");
+/*import { GameObject } from "./GameObjectClass.js";*/
 var dpi = window.devicePixelRatio;
 var canvas = document.getElementById("gameWindow");
-var ctx = canvas.getContext("2d");
+var ctx = canvas.getContext('2d');
 /**
  * Affiche tout les GameObjects contenus dans une liste
  *
@@ -32,7 +30,7 @@ function fix_dpi() {
         .getPropertyValue("width")
         .slice(0, -2);
     //scale the canvas
-    canvas.setAttribute("height", style_height * dpi);
-    canvas.setAttribute("width", style_width * dpi);
+    canvas.setAttribute("height", (style_height * dpi).toString(10));
+    canvas.setAttribute("width", (style_width * dpi).toString(10));
 }
-//export { refreshScreen };
+export { refreshScreen };

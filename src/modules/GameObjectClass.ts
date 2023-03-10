@@ -109,7 +109,11 @@ class GameObject {
  * @class Sprite
  */
 class Sprite {
-    size
+    size_X: number;
+    size_Y: number;
+    img: HTMLImageElement;
+    imgUrl: string;
+
     /**
      * Creates an instance of Sprite.
      * @param {string} sprite_URL chemin du sprite
@@ -154,6 +158,14 @@ class Sprite {
 }
 
 class SpriteAnimation {
+    size_X: number;
+    size_Y: number;
+    img: HTMLImageElement;
+    imgUrl: string;
+    frameSize_X: number;
+    frameSize_Y: number;
+    nbFrame: number;
+    requestID: number;
     /**
      * Creates an instance of SpriteAnimation.
      * @param {string} spriteSheet_URL
@@ -189,16 +201,14 @@ class SpriteAnimation {
                 this.requestID = window.requestAnimationFrame(
                     function () {
                         this.step(pos, ctx, this.nbFrame, 0);
-                    }.bind(this),
-                    this.nbFrame
+                    }.bind(this)
                 );
             } else {
                 this.img.addEventListener("load", (event) => {
                     this.requestID = window.requestAnimationFrame(
                         function () {
                             this.step(pos, ctx, this.nbFrame, 0);
-                        }.bind(this),
-                        this.nbFrame
+                        }.bind(this)
                     );
                 });
             }
@@ -218,8 +228,7 @@ class SpriteAnimation {
             this.requestID = window.requestAnimationFrame(
                 function () {
                     this.step(pos, ctx, counter, frameCount);
-                }.bind(this),
-                counter
+                }.bind(this)
             );
             return;
         }
@@ -232,16 +241,14 @@ class SpriteAnimation {
             this.requestID = window.requestAnimationFrame(
                 function () {
                     this.step(pos, ctx, counter, frameCount);
-                }.bind(this),
-                counter
+                }.bind(this)
             );
             return;
         }
         this.requestID = window.requestAnimationFrame(
             function () {
                 this.step(pos, ctx, counter, frameCount);
-            }.bind(this),
-            counter
+            }.bind(this)
         );
     }
 
@@ -271,12 +278,12 @@ class SpriteAnimation {
 
     stopRender() {
         if (this.requestID) {
-            window.cancelAnimationFrame(this.requestId);
-            this.requestId = undefined;
+            window.cancelAnimationFrame(this.requestID);
+            this.requestID = undefined;
         }
     }
 }
 
-//export { GameObject, Sprite, SpriteAnimation };
+export { GameObject, Sprite, SpriteAnimation };
 
 //#endregion

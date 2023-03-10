@@ -1,9 +1,9 @@
-/*import {
+import {
     GameObject,
     Sprite,
     SpriteAnimation,
-} from "./../modules/GameObjectClass.js";
-import { refreshScreen } from "./../modules/GameTools.js";*/
+} from "./modules/GameObjectClass.js";
+import { refreshScreen } from "./modules/GameTools.js";
 
 let allObjects = [];
 
@@ -47,5 +47,5 @@ window.onkeydown = function () {
         objB.setCurrentSprite("spriteImage");
         refreshScreen(allObjects);
     }
-    
+
 };

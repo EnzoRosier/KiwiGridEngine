@@ -1,4 +1,4 @@
-//import { GameObject } from "./GameObjectClass.js";
+/*import { GameObject } from "./GameObjectClass.js";*/
 
 var dpi = window.devicePixelRatio;
 var canvas = <HTMLCanvasElement> document.getElementById("gameWindow");
@@ -25,16 +25,16 @@ function refreshScreen(ObjectList) {
  */
 function fix_dpi() {
     //get CSS height
-    let style_height = +getComputedStyle(canvas)
+    let style_height: number = +getComputedStyle(canvas)
         .getPropertyValue("height")
         .slice(0, -2);
     //get CSS width
-    let style_width = +getComputedStyle(canvas)
+    let style_width: number = +getComputedStyle(canvas)
         .getPropertyValue("width")
         .slice(0, -2);
     //scale the canvas
-    canvas.setAttribute("height", style_height * dpi);
-    canvas.setAttribute("width", style_width * dpi);
+    canvas.setAttribute("height", (style_height * dpi).toString(10));
+    canvas.setAttribute("width", (style_width * dpi).toString(10));
 }
 
-//export { refreshScreen };
+export { refreshScreen };
