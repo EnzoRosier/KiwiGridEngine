@@ -1,8 +1,8 @@
-import { GameObject } from "./GameObjectClass.js";
+//import { GameObject } from "./GameObjectClass.js";
 
 var dpi = window.devicePixelRatio;
-var canvas = document.getElementById("gameWindow");
-var ctx = canvas.getContext("2d");
+var canvas = <HTMLCanvasElement> document.getElementById("gameWindow");
+var ctx : CanvasRenderingContext2D = canvas.getContext('2d');
 
 /**
  * Affiche tout les GameObjects contenus dans une liste
@@ -37,4 +37,4 @@ function fix_dpi() {
     canvas.setAttribute("width", style_width * dpi);
 }
 
-export { refreshScreen };
+//export { refreshScreen };
