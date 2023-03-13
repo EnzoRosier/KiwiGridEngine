@@ -3,17 +3,21 @@ html {
     height: 100%;
 }
 
-#gameWindow {
+canvas {
     border: 7px solid black ;
     height: 100%;
     width: 100%;
+    position: absolute;
 }
 
 #container {
+    position: absolute;
     margin: 0;
-    padding: 2em 0;
-    width: 70%;
-    aspect-ratio: 4/2;
+    width: 40%;
+    left:30%;
+    top: 5vw;
+    aspect-ratio: 1/1;
+    
 }
 
 #TitleDiv {

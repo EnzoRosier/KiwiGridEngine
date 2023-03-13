@@ -8,8 +8,8 @@ class GameObject {
     name: string;
     pos_X: number;
     pos_Y: number;
-    spritesCollection: Map<string, Sprite>;
-    currSprite: Sprite;
+    sprites_collection: Map<string, Sprite>;
+    curr_sprite: Sprite;
 
     /**
      * Creates an instance of GameObject.
@@ -21,8 +21,8 @@ class GameObject {
         this.name = name;
         this.pos_X = pos[0];
         this.pos_Y = pos[1];
-        this.spritesCollection = new Map<string, Sprite>();
-        this.currSprite = undefined;
+        this.sprites_collection = new Map<string, Sprite>();
+        this.curr_sprite = undefined;
     }
     /**
      * Renvoie le nom du GameObject
@@ -50,7 +50,7 @@ class GameObject {
      */
     setCurrentSprite(name: string) {
         this.stopRender();
-        this.currSprite = this.spritesCollection[name];
+        this.curr_sprite = this.sprites_collection[name];
     }
 
     /**
@@ -62,13 +62,13 @@ class GameObject {
      */
     addToSpriteCollection(name: string, sprite: Sprite | SpriteAnimation) {
         if (sprite instanceof Sprite) {
-            this.spritesCollection[name] = new Sprite(sprite.imgUrl, [sprite.size_X, sprite.size_Y]);
+            this.sprites_collection[name] = new Sprite(sprite.img_url, [sprite.size_X, sprite.size_Y]);
         } else {
-            this.spritesCollection[name] = new SpriteAnimation(
-                sprite.imgUrl,
-                [sprite.frameSize_X, sprite.frameSize_Y],
-                [sprite.frameSize_X, sprite.frameSize_Y],
-                sprite.nbFrame
+            this.sprites_collection[name] = new SpriteAnimation(
+                sprite.img_url,
+                [sprite.framesize_X, sprite.framesize_Y],
+                [sprite.framesize_X, sprite.framesize_Y],
+                sprite.nb_frame
             );
         }
     }
@@ -78,9 +78,10 @@ class GameObject {
      * @param {CanvasRenderingContext2D} ctx
      */
     renderObject(ctx: CanvasRenderingContext2D) {
-        if (this.currSprite != undefined) {
-            this.currSprite.render(
-                [this.pos_X, this.pos_Y],
+        
+        if (this.curr_sprite != undefined) {
+            this.curr_sprite.render(
+                [this.pos_X * 32 * 10, this.pos_Y * 32 * 10],
                 ctx
             );
         }
@@ -93,9 +94,9 @@ class GameObject {
      */
     stopRender() {
         if (
-            this.currSprite instanceof SpriteAnimation
+            this.curr_sprite instanceof SpriteAnimation
         ) {
-            this.currSprite.stopRender();
+            this.curr_sprite.stopRender();
         }
     }
 }
@@ -113,20 +114,20 @@ class Sprite {
     size_X: number;
     size_Y: number;
     img: HTMLImageElement;
-    imgUrl: string;
+    img_url: string;
 
     /**
      * Creates an instance of Sprite.
-     * @param {string} sprite_URL chemin du sprite
+     * @param {string} sprite_url chemin du sprite
      * @param {int[]} size_XY taille du sprite
      * @memberof Sprite
      */
-    constructor(sprite_URL: string, size_XY: number[]) {
+    constructor(sprite_url: string, size_XY: number[]) {
         this.size_X = size_XY[0];
         this.size_Y = size_XY[1];
         this.img = new Image();
-        this.img.src = sprite_URL;
-        this.imgUrl = sprite_URL;
+        this.img.src = sprite_url;
+        this.img_url = sprite_url;
     }
 
     /**
@@ -137,21 +138,20 @@ class Sprite {
      * @memberof Sprite
      */
     render(pos: number[], ctx: CanvasRenderingContext2D) {
-        ctx.imageSmoothingEnabled = false;
         // On check si l'image du Sprite est chargée par le navigateur
         if (this.img.complete) {
             // Si oui on affiche directement
-            ctx.drawImage(this.img, pos[0] * 4, pos[1] * 4, this.size_X * 4, this.size_Y * 4);
+            ctx.drawImage(this.img, pos[0], pos[1], this.size_X * 10, this.size_Y * 10);
         } else {
             // Si non
             this.img.addEventListener("load", (event) => {
                 // On attend que l'image soit chargée
                 ctx.drawImage(
                     this.img,
-                    pos[0] * 4,
-                    pos[1] * 4,
-                    this.size_X * 4,
-                    this.size_Y * 4
+                    pos[0],
+                    pos[1],
+                    this.size_X * 10,
+                    this.size_Y * 10
                 );
             });
         }
@@ -167,29 +167,29 @@ class SpriteAnimation {
     size_X: number;
     size_Y: number;
     img: HTMLImageElement;
-    imgUrl: string;
-    frameSize_X: number;
-    frameSize_Y: number;
-    nbFrame: number;
-    requestID: number;
+    img_url: string;
+    framesize_X: number;
+    framesize_Y: number;
+    nb_frame: number;
+    request_id: number;
     /**
      * Creates an instance of SpriteAnimation.
      * @param {string} spriteSheet_URL
      * @param {int[]} size_XY
      * @param {int[]} FrameSize_XY
-     * @param {int} nbFrame
+     * @param {int} nb_frame
      * @memberof SpriteAnimation
      */
-    constructor(spriteSheet_URL: string, size_XY: number[], frameSize_XY, nbFrame: number) {
+    constructor(spriteSheet_URL: string, size_XY: number[], frameSize_XY, nb_frame: number) {
         this.img = new Image();
         this.img.src = spriteSheet_URL;
-        this.imgUrl = spriteSheet_URL;
+        this.img_url = spriteSheet_URL;
         this.size_X = size_XY[0];
         this.size_Y = size_XY[1];
-        this.frameSize_X = frameSize_XY[0];
-        this.frameSize_Y = frameSize_XY[1];
-        this.nbFrame = nbFrame;
-        this.requestID = undefined;
+        this.framesize_X = frameSize_XY[0];
+        this.framesize_Y = frameSize_XY[1];
+        this.nb_frame = nb_frame;
+        this.request_id = undefined;
     }
 
     /**
@@ -200,20 +200,19 @@ class SpriteAnimation {
      * @memberof SpriteAnimation
      */
     render(pos: number[], ctx: CanvasRenderingContext2D) {
-        if (!this.requestID) {
-            ctx.imageSmoothingEnabled = false;
+        if (!this.request_id) {
             if (this.img.complete) {
                 // Si oui on affiche directement
-                this.requestID = window.requestAnimationFrame(
+                this.request_id = window.requestAnimationFrame(
                     function () {
-                        this.step(pos, ctx, this.nbFrame, 0);
+                        this.step(pos, ctx, this.nb_frame, 0);
                     }.bind(this)
                 );
             } else {
                 this.img.addEventListener("load", (event) => {
-                    this.requestID = window.requestAnimationFrame(
+                    this.request_id = window.requestAnimationFrame(
                         function () {
-                            this.step(pos, ctx, this.nbFrame, 0);
+                            this.step(pos, ctx, this.nb_frame, 0);
                         }.bind(this)
                     );
                 });
@@ -225,35 +224,35 @@ class SpriteAnimation {
      * @param {int[]} pos
      * @param {CanvasRenderingContext2D} ctx
      * @param {int} counter
-     * @param {int} frameCount
+     * @param {int} frame_count
      */
-    step(pos: number[], ctx: CanvasRenderingContext2D, counter: number, frameCount: number) {
-        //this.requestID = undefined;
-        frameCount++;
-        if (frameCount < 15) {
-            this.requestID = window.requestAnimationFrame(
+    step(pos: number[], ctx: CanvasRenderingContext2D, counter: number, frame_count: number) {
+        //this.request_id = undefined;
+        frame_count++;
+        if (frame_count < 15) {
+            this.request_id = window.requestAnimationFrame(
                 function () {
-                    this.step(pos, ctx, counter, frameCount);
+                    this.step(pos, ctx, counter, frame_count);
                 }.bind(this)
             );
             return;
         }
-        frameCount = 0;
-        ctx.clearRect(pos[0] * 4, pos[1] * 4, this.size_X * 4, this.size_Y * 4);
+        frame_count = 0;
+        ctx.clearRect(pos[0], pos[1], this.size_X * 10, this.size_Y * 10);
         this.drawFrame(counter, 0, pos, ctx);
         counter++;
-        if (counter >= this.nbFrame) {
+        if (counter >= this.nb_frame) {
             counter = 0;
-            this.requestID = window.requestAnimationFrame(
+            this.request_id = window.requestAnimationFrame(
                 function () {
-                    this.step(pos, ctx, counter, frameCount);
+                    this.step(pos, ctx, counter, frame_count);
                 }.bind(this)
             );
             return;
         }
-        this.requestID = window.requestAnimationFrame(
+        this.request_id = window.requestAnimationFrame(
             function () {
-                this.step(pos, ctx, counter, frameCount);
+                this.step(pos, ctx, counter, frame_count);
             }.bind(this)
         );
     }
@@ -271,21 +270,21 @@ class SpriteAnimation {
         
         ctx.drawImage(
             this.img,
-            frameX * this.frameSize_X,
-            frameY * this.frameSize_Y,
-            this.frameSize_X,
-            this.frameSize_Y,
-            pos_XY[0] * 4,
-            pos_XY[1] * 4,
-            this.size_X * 4,
-            this.size_Y * 4
+            frameX * this.framesize_X,
+            frameY * this.framesize_Y,
+            this.framesize_X,
+            this.framesize_Y,
+            pos_XY[0],
+            pos_XY[1],
+            this.size_X * 10,
+            this.size_Y * 10
         );
     }
 
     stopRender() {
-        if (this.requestID) {
-            window.cancelAnimationFrame(this.requestID);
-            this.requestID = undefined;
+        if (this.request_id) {
+            window.cancelAnimationFrame(this.request_id);
+            this.request_id = undefined;
         }
     }
 }
