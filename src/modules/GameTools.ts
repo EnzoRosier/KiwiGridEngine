@@ -1,5 +1,7 @@
 /*import { GameObject } from "./GameObjectClass.js";*/
 
+import { GameObject } from "./GameObjectClass";
+
 var dpi = window.devicePixelRatio;
 var canvas = <HTMLCanvasElement> document.getElementById("gameWindow");
 var ctx : CanvasRenderingContext2D = canvas.getContext('2d');
@@ -9,7 +11,7 @@ var ctx : CanvasRenderingContext2D = canvas.getContext('2d');
  *
  * @param {GameObject[]} ObjectList Liste de GameObject
  */
-function refreshScreen(ObjectList) {
+function refreshScreen(ObjectList: GameObject[]) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     fix_dpi(); //On règle le dpi
     ObjectList.forEach((val) => {

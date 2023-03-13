@@ -17,7 +17,7 @@ class GameObject {
      * @param {int[]} pos position x puis y de l'objet
      * @memberof GameObject
      */
-    constructor(name, pos) {
+    constructor(name: string, pos: number[]) {
         this.name = name;
         this.pos_X = pos[0];
         this.pos_Y = pos[1];
@@ -29,7 +29,7 @@ class GameObject {
      * @return {string} nom du GameObject
      * @memberof GameObject
      */
-    getObjectName() {
+    getObjectName(): string {
         return this.name;
     }
 
@@ -38,7 +38,7 @@ class GameObject {
      * @return {int[]}
      * @memberof GameObject
      */
-    getObjectPos() {
+    getObjectPos(): number[] {
         return [this.pos_X, this.pos_Y];
     }
 
@@ -48,7 +48,7 @@ class GameObject {
      * @param {string} name
      * @memberof GameObject
      */
-    setCurrentSprite(name) {
+    setCurrentSprite(name: string) {
         this.stopRender();
         this.currSprite = this.spritesCollection[name];
     }
@@ -60,7 +60,7 @@ class GameObject {
      * @param {Sprite|SpriteAnimation} sprite
      * @memberof GameObject
      */
-    addToSpriteCollection(name, sprite) {
+    addToSpriteCollection(name: string, sprite: Sprite | SpriteAnimation) {
         if (sprite instanceof Sprite) {
             this.spritesCollection[name] = new Sprite(sprite.imgUrl, [sprite.size_X, sprite.size_Y]);
         } else {
@@ -77,7 +77,7 @@ class GameObject {
      * Affiche le gameObject dans le contexte ctx
      * @param {CanvasRenderingContext2D} ctx
      */
-    renderObject(ctx) {
+    renderObject(ctx: CanvasRenderingContext2D) {
         if (this.currSprite != undefined) {
             this.currSprite.render(
                 [this.pos_X, this.pos_Y],
@@ -121,7 +121,7 @@ class Sprite {
      * @param {int[]} size_XY taille du sprite
      * @memberof Sprite
      */
-    constructor(sprite_URL, size_XY) {
+    constructor(sprite_URL: string, size_XY: number[]) {
         this.size_X = size_XY[0];
         this.size_Y = size_XY[1];
         this.img = new Image();
@@ -136,7 +136,7 @@ class Sprite {
      * @param {CanvasRenderingContext2D} ctx context2D
      * @memberof Sprite
      */
-    render(pos, ctx) {
+    render(pos: number[], ctx: CanvasRenderingContext2D) {
         ctx.imageSmoothingEnabled = false;
         // On check si l'image du Sprite est chargée par le navigateur
         if (this.img.complete) {
@@ -158,6 +158,11 @@ class Sprite {
     }
 }
 
+/**
+ * Objet contenant une animation et ses informations
+ *
+ * @class SpriteAnimation
+ */
 class SpriteAnimation {
     size_X: number;
     size_Y: number;
@@ -175,7 +180,7 @@ class SpriteAnimation {
      * @param {int} nbFrame
      * @memberof SpriteAnimation
      */
-    constructor(spriteSheet_URL, size_XY, frameSize_XY, nbFrame) {
+    constructor(spriteSheet_URL: string, size_XY: number[], frameSize_XY, nbFrame: number) {
         this.img = new Image();
         this.img.src = spriteSheet_URL;
         this.imgUrl = spriteSheet_URL;
@@ -194,7 +199,7 @@ class SpriteAnimation {
      * @param {CanvasRenderingContext2D} ctx
      * @memberof SpriteAnimation
      */
-    render(pos, ctx) {
+    render(pos: number[], ctx: CanvasRenderingContext2D) {
         if (!this.requestID) {
             ctx.imageSmoothingEnabled = false;
             if (this.img.complete) {
@@ -222,7 +227,7 @@ class SpriteAnimation {
      * @param {int} counter
      * @param {int} frameCount
      */
-    step(pos, ctx, counter, frameCount) {
+    step(pos: number[], ctx: CanvasRenderingContext2D, counter: number, frameCount: number) {
         //this.requestID = undefined;
         frameCount++;
         if (frameCount < 15) {
@@ -262,7 +267,7 @@ class SpriteAnimation {
      * @param {CanvasRenderingContext2D} ctx
      * @memberof SpriteAnimation
      */
-    drawFrame(frameX, frameY, pos_XY, ctx) {
+    drawFrame(frameX: number, frameY: number, pos_XY: number[], ctx: CanvasRenderingContext2D) {
         
         ctx.drawImage(
             this.img,

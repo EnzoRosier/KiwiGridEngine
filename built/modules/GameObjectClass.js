@@ -123,6 +123,11 @@ class Sprite {
         }
     }
 }
+/**
+ * Objet contenant une animation et ses informations
+ *
+ * @class SpriteAnimation
+ */
 class SpriteAnimation {
     /**
      * Creates an instance of SpriteAnimation.
