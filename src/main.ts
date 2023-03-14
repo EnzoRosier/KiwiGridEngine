@@ -3,8 +3,9 @@ import {
     Sprite,
     SpriteAnimation,
 } from "./modules/GameObjectClass.js";
-import { refreshScreen } from "./modules/GameTools.js";
+import { refreshScreen, getMousePos } from "./modules/GameTools.js";
 import { Grid } from "./modules/Grid.js";
+import { ClickEvent } from "./modules/Events.js";
 let all_grids = [];
 
 let main_grid = new Grid([10, 10]);
@@ -21,7 +22,7 @@ let spriteB = new SpriteAnimation(
 let spritetile = new Sprite("./../ressources/BaseTiles.png", [32, 32]);
 
 let objA = new GameObject("objet A", [2, 1]);
-let objB = new GameObject("objet B", [1, 1]);
+let objB = new GameObject("objet B", [2, 2]);
 
 objA.addToSpriteCollection("spriteB", spriteB);
 objA.addToSpriteCollection("spriteTile", spritetile);
@@ -29,12 +30,6 @@ objA.setCurrentSprite("spriteB");
 
 objB.addToSpriteCollection("spriteImage", spriteA);
 objB.setCurrentSprite("spriteImage");
-
-for (let i = 0; i < 10; i++) {
-    main_grid.list_objects.push(new GameObject(i.toString(), [i, i]));
-    main_grid.list_objects[i].addToSpriteCollection("spriteImage", spriteA);
-    main_grid.list_objects[i].setCurrentSprite("spriteImage");
-}
 
 let cv_grid = <HTMLCanvasElement> document.getElementById("backGrid");
 cv_grid.width = 3200;
@@ -49,14 +44,39 @@ for (let i = 0; i < 10; i++) {
 }
 
 main_grid.list_objects.push(objA);
+main_grid.list_objects.push(objB);
 
 main_grid.generate_canvas("container");
 
 refreshScreen(all_grids);
 
+let interactible_canvas = document.getElementById("interactableGrid");
+
 var onoff = false;
 
-window.onkeydown = function () {
+main_grid.grid_click_events.push(new ClickEvent([2,1],32,32))
+main_grid.grid_click_events[0].event_func = () => {
+    alert("Clicked Bubble");
+}
+
+main_grid.grid_click_events.push(new ClickEvent([2,2],32,32))
+main_grid.grid_click_events[1].event_func = () => {
+    alert("Clicked Factory");
+}
+
+interactible_canvas.addEventListener('click', function(evt) {
+    var mousePos = getMousePos(interactible_canvas, evt);
+    main_grid.grid_click_events.forEach(val => {
+        if (val.isClicked(mousePos)) {
+            console.log("Bruh");
+            val.event_func();
+        }
+         
+    });
+    
+}, false);
+
+/* window.onkeydown = function () {
     if (onoff) {
         onoff = false;
         objA.setCurrentSprite("spriteB");
@@ -67,4 +87,4 @@ window.onkeydown = function () {
         refreshScreen(all_grids);
     }
 
-};
+}; */

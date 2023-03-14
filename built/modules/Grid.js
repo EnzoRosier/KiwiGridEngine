@@ -5,6 +5,7 @@ export class Grid {
         this.list_objects = [];
         this.grid_canvas = undefined;
         this.grid_ctx = undefined;
+        this.grid_click_events = [];
     }
     generate_canvas(display_window) {
         this.grid_canvas = document.createElement("canvas");

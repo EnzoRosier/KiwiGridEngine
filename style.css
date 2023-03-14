@@ -4,6 +4,7 @@ html {
 }
 
 canvas {
+    z-index: 2;
     border: 7px solid black ;
     height: 100%;
     width: 100%;
@@ -40,4 +41,8 @@ h1 {
     image-rendering: pixelated;
     width: 5em;
     margin-left: 2em;    
+}
+
+#interactableGrid {
+    z-index: 3;
 }
