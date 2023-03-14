@@ -1,5 +1,6 @@
 //#region GameObjects
 import { SpriteManager } from "./Sprite.js";
+import { ClickEvent } from "./Events.js";
 /**
  *
  *
@@ -60,6 +61,7 @@ class GameObject {
      */
     renderObject(ctx) {
         this.object_sprite_manager.render(ctx, [this.pos_X, this.pos_Y]);
+        this.linked_click_event.render(ctx);
     }
     /**
      *
@@ -68,6 +70,17 @@ class GameObject {
      */
     stopObjectRender() {
         this.object_sprite_manager.stopRender();
+        this.linked_click_event.stopRender();
+    }
+    setLinkedClickEvent(offset_pos, width, height, sprite, func) {
+        this.linked_click_event = new ClickEvent([(this.pos_X + offset_pos[0]), (this.pos_X + offset_pos[1])], width, height);
+        if (!(sprite === undefined)) {
+            this.linked_click_event.addToSpriteCollection("spriteBase", sprite);
+            this.linked_click_event.setCurrentSprite("spriteBase");
+        }
+        if (!(func === undefined)) {
+            this.linked_click_event.event_func = func;
+        }
     }
 }
 //#endregion

@@ -74,7 +74,8 @@ class GameObject {
      */
     renderObject(ctx: CanvasRenderingContext2D) {
         
-        this.object_sprite_manager.render(ctx, [this.pos_X, this.pos_Y])
+        this.object_sprite_manager.render(ctx, [this.pos_X, this.pos_Y]);
+        this.linked_click_event.render(ctx);
     }
 
     /**
@@ -83,8 +84,23 @@ class GameObject {
      * @memberof GameObject
      */
     stopObjectRender() {
-        this.object_sprite_manager.stopRender()
+        this.object_sprite_manager.stopRender();
+        this.linked_click_event.stopRender();
     }
+
+    setLinkedClickEvent(offset_pos : number[], width : number, height : number, sprite : Sprite | SpriteAnimation, func : () => void) {
+        this.linked_click_event = new ClickEvent([(this.pos_X + offset_pos[0]), (this.pos_X + offset_pos[1])], width, height);
+        if (!(sprite === undefined)) {
+            this.linked_click_event.addToSpriteCollection("spriteBase",sprite);
+            this.linked_click_event.setCurrentSprite("spriteBase");
+        }
+
+        if (!(func === undefined)) {
+            this.linked_click_event.event_func = func;
+        }
+        
+    }
+
 }
 //#endregion
 

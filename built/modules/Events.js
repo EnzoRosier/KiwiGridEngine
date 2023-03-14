@@ -1,4 +1,7 @@
 import { SpriteManager } from "./Sprite.js";
+let interactible_canvas = document.getElementById("interactableGrid");
+let interact_ctx = interactible_canvas.getContext("2d");
+interact_ctx.imageSmoothingEnabled = false;
 /**
  * Objet associant une zone du canvas interactible avec un effet
  *
@@ -58,7 +61,7 @@ export class ClickEvent {
      * @param {CanvasRenderingContext2D} ctx
      */
     render(ctx) {
-        this.event_sprite_manager.render(ctx, [this.pos_X, this.pos_Y]);
+        this.event_sprite_manager.render(interact_ctx, [this.pos_X, this.pos_Y]);
     }
     /**
      *
