@@ -13,8 +13,7 @@ class GameObject {
     pos_X: number;
     pos_Y: number;
     linked_click_event: ClickEvent;
-    object_sprite_manager : SpriteManager;
-
+    object_sprite_manager: SpriteManager;
 
     /**
      * Creates an instance of GameObject.
@@ -54,7 +53,7 @@ class GameObject {
      * @memberof GameObject
      */
     setObjectCurrentSprite(name: string) {
-       this.object_sprite_manager.setCurrentSprite(name);
+        this.object_sprite_manager.setCurrentSprite(name);
     }
 
     /**
@@ -64,7 +63,10 @@ class GameObject {
      * @param {Sprite|SpriteAnimation} sprite
      * @memberof GameObject
      */
-    addToObjectSpriteCollection(name: string, sprite: Sprite | SpriteAnimation) {
+    addToObjectSpriteCollection(
+        name: string,
+        sprite: Sprite | SpriteAnimation
+    ) {
         this.object_sprite_manager.addToSpriteCollection(name, sprite);
     }
 
@@ -73,9 +75,10 @@ class GameObject {
      * @param {CanvasRenderingContext2D} ctx
      */
     renderObject(ctx: CanvasRenderingContext2D) {
-        
         this.object_sprite_manager.render(ctx, [this.pos_X, this.pos_Y]);
-        this.linked_click_event.render(ctx);
+        if (!(this.linked_click_event === undefined)) {
+            this.linked_click_event.render(ctx);
+        }
     }
 
     /**
@@ -88,21 +91,28 @@ class GameObject {
         this.linked_click_event.stopRender();
     }
 
-    setLinkedClickEvent(offset_pos : number[], width : number, height : number, sprite : Sprite | SpriteAnimation, func : () => void) {
-        this.linked_click_event = new ClickEvent([(this.pos_X + offset_pos[0]), (this.pos_X + offset_pos[1])], width, height);
+    setLinkedClickEvent(
+        offset_pos: number[],
+        width: number,
+        height: number,
+        sprite: Sprite | SpriteAnimation,
+        func: () => void
+    ) {
+        this.linked_click_event = new ClickEvent(
+            [this.pos_X + offset_pos[0], this.pos_X + offset_pos[1]],
+            width,
+            height
+        );
         if (!(sprite === undefined)) {
-            this.linked_click_event.addToSpriteCollection("spriteBase",sprite);
+            this.linked_click_event.addToSpriteCollection("spriteBase", sprite);
             this.linked_click_event.setCurrentSprite("spriteBase");
         }
 
         if (!(func === undefined)) {
             this.linked_click_event.event_func = func;
         }
-        
     }
-
 }
 //#endregion
 
 export { GameObject };
-

@@ -10,8 +10,9 @@ all_grids.push(main_grid);
 let sprite_factory = new Sprite("./../ressources/Factory_SpriteSheet.png", [32, 32]);
 let sprite_tile = new Sprite("./../ressources/BaseTiles.png", [32, 32]);
 let sprite_bubble = new SpriteAnimation("./../ressources/Interractible_Sprite_Sheet.png", [32, 32], [32, 32], 12);
+let sprite_pipe = new Sprite("./../ressources/pipe_Sprite_Sheet.png", [32, 32]);
 //#endregion
-//#region backgrid
+//#region backgrid & interact
 interactible_canvas.addEventListener('click', function (evt) {
     var mousePos = getMousePos(interactible_canvas, evt);
     main_grid.list_objects.forEach(val => {
@@ -39,6 +40,11 @@ obj1.setObjectCurrentSprite("Factory_Sprite");
 obj1.setLinkedClickEvent([0, -0.7], 32, 32, sprite_bubble, () => {
     alert("Bruh");
 });
+for (let i = 0; i < 10; i++) {
+    main_grid.list_objects.push(new GameObject("Pipe" + i, [2, i]));
+    main_grid.list_objects[i].addToObjectSpriteCollection("baseSprite", sprite_pipe);
+    main_grid.list_objects[i].setObjectCurrentSprite("baseSprite");
+}
 main_grid.list_objects.push(obj1);
 refreshScreen(all_grids);
 //# sourceMappingURL=main.js.map
