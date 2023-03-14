@@ -1,7 +1,8 @@
-import { GameObject, Sprite, SpriteAnimation, } from "./modules/GameObjectClass.js";
+import { GameObject } from "./modules/GameObjectClass.js";
 import { refreshScreen, getMousePos } from "./modules/GameTools.js";
 import { Grid } from "./modules/Grid.js";
 import { ClickEvent } from "./modules/Events.js";
+import { Sprite, SpriteAnimation } from "./modules/Sprite.js";
 let all_grids = [];
 let main_grid = new Grid([10, 10]);
 all_grids.push(main_grid);
@@ -10,11 +11,11 @@ let spriteB = new SpriteAnimation("./../ressources/Interractible_Sprite_Sheet.pn
 let spritetile = new Sprite("./../ressources/BaseTiles.png", [32, 32]);
 let objA = new GameObject("objet A", [2, 1]);
 let objB = new GameObject("objet B", [2, 2]);
-objA.addToSpriteCollection("spriteB", spriteB);
-objA.addToSpriteCollection("spriteTile", spritetile);
-objA.setCurrentSprite("spriteB");
-objB.addToSpriteCollection("spriteImage", spriteA);
-objB.setCurrentSprite("spriteImage");
+objA.addToObjectSpriteCollection("spriteB", spriteB);
+objA.addToObjectSpriteCollection("spriteTile", spritetile);
+objA.setObjectCurrentSprite("spriteB");
+objB.addToObjectSpriteCollection("spriteImage", spriteA);
+objB.setObjectCurrentSprite("spriteImage");
 let cv_grid = document.getElementById("backGrid");
 cv_grid.width = 3200;
 cv_grid.height = 3200;
@@ -48,16 +49,16 @@ interactible_canvas.addEventListener('click', function (evt) {
         }
     });
 }, false);
-/* window.onkeydown = function () {
+window.onkeydown = function () {
     if (onoff) {
         onoff = false;
-        objA.setCurrentSprite("spriteB");
-        refreshScreen(all_grids);
-    } else {
-        onoff = true;
-        objA.setCurrentSprite("spriteTile");
+        objA.setObjectCurrentSprite("spriteB");
         refreshScreen(all_grids);
     }
-
-}; */
+    else {
+        onoff = true;
+        objA.setObjectCurrentSprite("spriteTile");
+        refreshScreen(all_grids);
+    }
+};
 //# sourceMappingURL=main.js.map

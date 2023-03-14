@@ -1,3 +1,5 @@
+import { Sprite, SpriteManager } from "./Sprite.js";
+
 /**
  * Objet associant une zone du canvas interactible avec un effet
  *
@@ -9,6 +11,7 @@ export class ClickEvent {
     pos_Y: number;
     width: number;
     height: number;
+    event_sprite_manager: SpriteManager;
     event_func: () => void;
 
     constructor(pos: number[], width: number, height) {
@@ -17,6 +20,7 @@ export class ClickEvent {
         this.width = width;
         this.height = height;
         this.event_func = null;
+        this.event_sprite_manager = new SpriteManager();
     }
 
     isClicked(pos): boolean {
