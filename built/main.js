@@ -17,7 +17,7 @@ interactible_canvas.addEventListener('click', function (evt) {
     var mousePos = getMousePos(interactible_canvas, evt);
     main_grid.list_objects.forEach(val => {
         console.log(mousePos);
-        if (val.linked_click_event.isClicked(mousePos)) {
+        if (val.linked_click_event != undefined && val.linked_click_event.isClicked(mousePos)) {
             val.linked_click_event.event_func();
         }
     });
