@@ -6,6 +6,7 @@ interact_ctx .imageSmoothingEnabled = false;
 
 /**
  * Objet associant une zone du canvas interactible avec un effet
+ * (Affichage optionel)
  *
  * @export
  * @class ClickEvent
@@ -38,7 +39,7 @@ export class ClickEvent {
      * Retourne si la position pos ce trouve dans la hitbox de l'event
      *
      * @param {*} pos position
-     * @return {boolean} 
+     * @return {boolean}  
      * @memberof ClickEvent
      */
     isClicked(pos): boolean {
