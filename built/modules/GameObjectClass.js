@@ -59,10 +59,10 @@ class GameObject {
      * Affiche le gameObject dans le contexte ctx
      * @param {CanvasRenderingContext2D} ctx
      */
-    renderObject(ctx) {
-        this.object_sprite_manager.render(ctx, [this.pos_X, this.pos_Y]);
+    renderObject(ctx, zoom, zoom_pos) {
+        this.object_sprite_manager.render(ctx, [this.pos_X - zoom_pos[0], this.pos_Y - zoom_pos[1]], zoom, zoom_pos);
         if (!(this.linked_click_event === undefined)) {
-            this.linked_click_event.render(ctx);
+            this.linked_click_event.render(ctx, zoom, zoom_pos);
         }
     }
     /**
@@ -75,7 +75,7 @@ class GameObject {
         this.linked_click_event.stopRender();
     }
     setLinkedClickEvent(offset_pos, width, height, sprite, func) {
-        this.linked_click_event = new ClickEvent([this.pos_X + offset_pos[0], this.pos_X + offset_pos[1]], width, height);
+        this.linked_click_event = new ClickEvent([this.pos_X + offset_pos[0], this.pos_Y + offset_pos[1]], width, height);
         if (!(sprite === undefined)) {
             this.linked_click_event.addToSpriteCollection("spriteBase", sprite);
             this.linked_click_event.setCurrentSprite("spriteBase");

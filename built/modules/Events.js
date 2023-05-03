@@ -32,11 +32,11 @@ export class ClickEvent {
      * @return {boolean}
      * @memberof ClickEvent
      */
-    isClicked(pos) {
-        return pos.x > this.pos_X * 320
-            && pos.x < this.pos_X * 320 + this.width * 10
-            && pos.y < this.pos_Y * 320 + this.height * 10
-            && pos.y > this.pos_Y * 320;
+    isClicked(pos, zoom, zoom_pos) {
+        return pos.x > (this.pos_X - zoom_pos[0]) * (3200 / zoom)
+            && pos.x < (this.pos_X - zoom_pos[0]) * (3200 / zoom) + this.width / this.height * (3200 / zoom)
+            && pos.y < (this.pos_Y - zoom_pos[1]) * (3200 / zoom) + this.height / this.width * (3200 / zoom)
+            && pos.y > (this.pos_Y - zoom_pos[1]) * (3200 / zoom);
     }
     /**
      * Change le sprite du GameObject à afficher
@@ -61,8 +61,8 @@ export class ClickEvent {
      * Affiche le gameObject dans le contexte ctx
      * @param {CanvasRenderingContext2D} ctx
      */
-    render(ctx) {
-        this.event_sprite_manager.render(interact_ctx, [this.pos_X, this.pos_Y]);
+    render(ctx, zoom, zoom_pos) {
+        this.event_sprite_manager.render(interact_ctx, [this.pos_X - zoom_pos[0], this.pos_Y - zoom_pos[1]], zoom, zoom_pos);
     }
     /**
      *

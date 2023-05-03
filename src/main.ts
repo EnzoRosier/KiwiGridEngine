@@ -1,15 +1,17 @@
 import { GameObject } from "./modules/GameObjectClass.js";
-import { refreshScreen, getMousePos, drawBackgroundGrid } from "./modules/GameTools.js";
+import * as tools from "./modules/GameTools.js";
 import { Grid } from "./modules/Grid.js";
 import { ClickEvent } from "./modules/Events.js";
 import { Sprite, SpriteAnimation } from "./modules/Sprite.js";
+import { initControl } from "./modules/ControlMap.js";
 
-let all_grids = [];
-let show_grid_size = 12;
-let show_grid_pos = [0, 0];
-let main_grid = new Grid([10, 10]);
-let interactible_canvas = document.getElementById("interactableGrid");
-all_grids.push(main_grid);
+
+
+let main_grid = new Grid([tools.grid_size, tools.grid_size]);
+tools.initCanvas();
+tools.all_grids.push(main_grid);
+
+initControl();
 
 //#region Sprite declaration
 
@@ -22,41 +24,35 @@ let sprite_bubble = new SpriteAnimation(
     12
 );
 let sprite_pipe = new Sprite("./../ressources/pipe_Sprite_Sheet.png", [32, 32]);
-
+tools.setBackgroundTile(sprite_tile);
 //#endregion
 
 //#region backgrid & interact
 
-interactible_canvas.addEventListener('click', function (evt) {
-    var mousePos = getMousePos(interactible_canvas, evt);
+tools.interactible_canvas.addEventListener('click', function (evt) {
+    var mousePos = tools.getMousePos(tools.interactible_canvas, evt);
     main_grid.map_objects.forEach(val => {
         console.log(mousePos);
-        if (val.linked_click_event != undefined && val.linked_click_event.isClicked(mousePos)) {
+        if (val.linked_click_event != undefined && val.linked_click_event.isClicked(mousePos, tools.show_grid_size, tools.show_grid_pos)) {
             val.linked_click_event.event_func();
         }
     });
 
 }, false);
 
-let cv_grid = <HTMLCanvasElement>document.getElementById("backGrid");
-cv_grid.width = 3200;
-cv_grid.height = 3200;
-let back_grid_ctx = cv_grid.getContext("2d");
-back_grid_ctx.imageSmoothingEnabled = false;
-
-drawBackgroundGrid(show_grid_size, sprite_tile, back_grid_ctx);
+tools.drawBackgroundGrid(tools.show_grid_size, sprite_tile, tools.back_grid_ctx);
 
 //#endregion
 
 main_grid.generate_canvas("container");
 
-/*let obj1: GameObject = new GameObject("Usine de Bob", [5, 5]);
+let obj1: GameObject = new GameObject("Usine de Bob", [9, 4]);
 obj1.addToObjectSpriteCollection("Factory_Sprite", sprite_factory)
 obj1.setObjectCurrentSprite("Factory_Sprite");
 obj1.setLinkedClickEvent([0, -0.7], 32, 32, sprite_bubble, () => {
     alert("Bruh");
 });
 
-main_grid.addObject(obj1);*/
+main_grid.addObject(obj1);
 
-refreshScreen(all_grids);
+tools.refreshScreen(tools.all_grids, tools.show_grid_size, tools.show_grid_pos);

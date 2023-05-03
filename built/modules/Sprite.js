@@ -71,18 +71,18 @@ class SpriteAnimation {
      * @param {CanvasRenderingContext2D} ctx
      * @memberof SpriteAnimation
      */
-    render(pos, ctx) {
+    render(pos, ctx, zoom) {
         if (!this.request_id) {
             if (this.img.complete) {
                 // Si oui on affiche directement
                 this.request_id = window.requestAnimationFrame(function () {
-                    this.step(pos, ctx, this.nb_frame, 0);
+                    this.step(pos, ctx, this.nb_frame, 0, zoom);
                 }.bind(this));
             }
             else {
                 this.img.addEventListener("load", (event) => {
                     this.request_id = window.requestAnimationFrame(function () {
-                        this.step(pos, ctx, this.nb_frame, 0);
+                        this.step(pos, ctx, this.nb_frame, 0, zoom);
                     }.bind(this));
                 });
             }
@@ -94,29 +94,31 @@ class SpriteAnimation {
      * @param {CanvasRenderingContext2D} ctx
      * @param {int} counter
      * @param {int} frame_count
+     * @param {int} zoom
+     * @param {int[]} zoom_pos
      */
-    step(pos, ctx, counter, frame_count) {
+    step(pos, ctx, counter, frame_count, zoom, zoom_pos) {
         //this.request_id = undefined;
         frame_count++;
         if (frame_count < 15) {
             this.request_id = window.requestAnimationFrame(function () {
-                this.step(pos, ctx, counter, frame_count);
+                this.step(pos, ctx, counter, frame_count, zoom);
             }.bind(this));
             return;
         }
         frame_count = 0;
-        ctx.clearRect(pos[0], pos[1], this.size_X * 10, this.size_Y * 10);
-        this.drawFrame(counter, 0, pos, ctx);
+        ctx.clearRect(pos[0], pos[1], (this.size_X / this.size_Y) * (3200 / zoom), (this.size_Y / this.size_X) * (3200 / zoom));
+        this.drawFrame(counter, 0, pos, ctx, zoom);
         counter++;
         if (counter >= this.nb_frame) {
             counter = 0;
             this.request_id = window.requestAnimationFrame(function () {
-                this.step(pos, ctx, counter, frame_count);
+                this.step(pos, ctx, counter, frame_count, zoom, zoom_pos);
             }.bind(this));
             return;
         }
         this.request_id = window.requestAnimationFrame(function () {
-            this.step(pos, ctx, counter, frame_count);
+            this.step(pos, ctx, counter, frame_count, zoom, zoom_pos);
         }.bind(this));
     }
     /**
@@ -128,8 +130,8 @@ class SpriteAnimation {
      * @param {CanvasRenderingContext2D} ctx
      * @memberof SpriteAnimation
      */
-    drawFrame(frameX, frameY, pos_XY, ctx) {
-        ctx.drawImage(this.img, frameX * this.framesize_X, frameY * this.framesize_Y, this.framesize_X, this.framesize_Y, pos_XY[0], pos_XY[1], this.size_X * 10, this.size_Y * 10);
+    drawFrame(frameX, frameY, pos_XY, ctx, zoom) {
+        ctx.drawImage(this.img, frameX * this.framesize_X, frameY * this.framesize_Y, this.framesize_X, this.framesize_Y, pos_XY[0], pos_XY[1], (this.size_X / this.size_Y) * (3200 / zoom), (this.size_Y / this.size_X) * (3200 / zoom));
     }
     /**
      * Fonction qui arrête l'animation en cours
@@ -184,10 +186,9 @@ class SpriteManager {
      * @param {CanvasRenderingContext2D} ctx
      * @param {number[]} pos
      */
-    render(ctx, pos) {
+    render(ctx, pos, zoom, zoom_pos) {
         if (this.curr_sprite != undefined) {
-            this.curr_sprite.render([pos[0] * 32 * 10, pos[1] * 32 * 10], ctx, 9 //TMP
-            );
+            this.curr_sprite.render([pos[0] * (3200 / zoom), pos[1] * (3200 / zoom)], ctx, zoom);
         }
     }
     /**

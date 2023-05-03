@@ -74,10 +74,10 @@ class GameObject {
      * Affiche le gameObject dans le contexte ctx
      * @param {CanvasRenderingContext2D} ctx
      */
-    renderObject(ctx: CanvasRenderingContext2D) {
-        this.object_sprite_manager.render(ctx, [this.pos_X, this.pos_Y]);
+    renderObject(ctx: CanvasRenderingContext2D, zoom: number, zoom_pos:number[]) {
+        this.object_sprite_manager.render(ctx, [this.pos_X - zoom_pos[0], this.pos_Y - zoom_pos[1]], zoom, zoom_pos);
         if (!(this.linked_click_event === undefined)) {
-            this.linked_click_event.render(ctx);
+            this.linked_click_event.render(ctx, zoom, zoom_pos);
         }
     }
 
@@ -99,7 +99,7 @@ class GameObject {
         func: () => void
     ) {
         this.linked_click_event = new ClickEvent(
-            [this.pos_X + offset_pos[0], this.pos_X + offset_pos[1]],
+            [this.pos_X + offset_pos[0], this.pos_Y + offset_pos[1]],
             width,
             height
         );

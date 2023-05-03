@@ -8,16 +8,20 @@ export class Grid {
     }
     generate_canvas(display_window) {
         this.grid_canvas = document.createElement("canvas");
-        this.grid_canvas.width = this.grid_rows * 32 * 10;
-        this.grid_canvas.height = this.grid_rows * 32 * 10;
+        this.grid_canvas.width = 3200;
+        this.grid_canvas.height = 3200;
         this.grid_ctx = this.grid_canvas.getContext("2d");
         this.grid_ctx.imageSmoothingEnabled = false;
         document.getElementById(display_window).appendChild(this.grid_canvas);
     }
-    draw_grid() {
+    draw_grid(zoom, zoom_pos) {
         this.grid_ctx.clearRect(0, 0, this.grid_canvas.width, this.grid_canvas.height);
         this.map_objects.forEach(val => {
-            val.renderObject(this.grid_ctx);
+            val.stopObjectRender();
+            if (val.pos_X >= zoom_pos[0] && val.pos_X < zoom + zoom_pos[0]
+                && val.pos_Y >= zoom_pos[1] && val.pos_Y < zoom + zoom_pos[1]) {
+                val.renderObject(this.grid_ctx, zoom, zoom_pos);
+            }
         });
     }
     addObject(object) {
