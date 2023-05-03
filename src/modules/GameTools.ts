@@ -11,14 +11,16 @@ let grid_size: number = 20;
 let show_grid_size: number = 8;
 let show_grid_pos: number[] = [0, 0];
 let all_grids: Grid[] = [];
-let cv_grid = undefined;
-let back_grid_ctx = undefined;
+let cv_grid: HTMLCanvasElement = undefined;
+let back_grid_ctx: CanvasRenderingContext2D = undefined;
 let background_tile: Sprite = undefined;
 
 /**
  * Affiche tout les GameObjects contenus dans une liste
  *
  * @param {GameObject[]} ObjectList Liste de GameObject
+ * @param {number} zoom nbr cases affiche
+ * @param {number[]} zoom position zone affiche
  */
 function refreshScreen(ObjectList: Grid[], zoom: number, zoom_pos: number[]) {
     interactible_canvas.getContext("2d").clearRect(0, 0, interactible_canvas.width, interactible_canvas.height);
@@ -29,6 +31,24 @@ function refreshScreen(ObjectList: Grid[], zoom: number, zoom_pos: number[]) {
     });
 }
 
+function initMouseDetect(main_grid) {
+    interactible_canvas.addEventListener('click', function (evt) {
+        var mousePos = getMousePos(interactible_canvas, evt);
+        main_grid.map_objects.forEach(val => {
+            console.log(mousePos);
+            if (val.linked_click_event != undefined && val.linked_click_event.isClicked(mousePos, show_grid_size, show_grid_pos)) {
+                val.linked_click_event.event_func();
+            }
+        });
+    
+    }, false);
+}
+
+/**
+ * Indique le sprite de fond
+ *
+ * @param {Sprite} sprite Sprite de fond
+ */
 function setBackgroundTile(sprite: Sprite) {
     background_tile = sprite;
 }
@@ -119,6 +139,11 @@ function moveScreen(dir: number) {
     refreshScreen(all_grids, show_grid_size, show_grid_pos);
 }
 
+/**
+ * Modifie la taille de la zone de jeu visible
+ *
+ * @param {number} updown
+ */
 function zoomScreen(updown: number) {
     switch (updown) {
         //SCALE DOWN
@@ -127,7 +152,7 @@ function zoomScreen(updown: number) {
                 show_grid_size--;
             }
             break;
-        
+
         //SCALE UP
         case 1:
             if (show_grid_size < grid_size) {
@@ -159,5 +184,6 @@ export {
     zoomScreen,
     back_grid_ctx,
     setBackgroundTile,
-    grid_size
+    grid_size,
+    initMouseDetect
 };

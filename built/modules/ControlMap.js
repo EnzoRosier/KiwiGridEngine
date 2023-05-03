@@ -1,4 +1,8 @@
 import { moveScreen, zoomScreen } from "./GameTools.js";
+/**
+ * Fonction qui initialise les events de touches
+ *
+ */
 function initControl() {
     window.onkeydown = function (gfg) {
         console.log("KEY");

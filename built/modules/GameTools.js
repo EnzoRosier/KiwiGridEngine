@@ -12,6 +12,8 @@ let background_tile = undefined;
  * Affiche tout les GameObjects contenus dans une liste
  *
  * @param {GameObject[]} ObjectList Liste de GameObject
+ * @param {number} zoom nbr cases affiche
+ * @param {number[]} zoom position zone affiche
  */
 function refreshScreen(ObjectList, zoom, zoom_pos) {
     interactible_canvas.getContext("2d").clearRect(0, 0, interactible_canvas.width, interactible_canvas.height);
@@ -21,6 +23,22 @@ function refreshScreen(ObjectList, zoom, zoom_pos) {
         val.draw_grid(zoom, zoom_pos);
     });
 }
+function initMouseDetect(main_grid) {
+    interactible_canvas.addEventListener('click', function (evt) {
+        var mousePos = getMousePos(interactible_canvas, evt);
+        main_grid.map_objects.forEach(val => {
+            console.log(mousePos);
+            if (val.linked_click_event != undefined && val.linked_click_event.isClicked(mousePos, show_grid_size, show_grid_pos)) {
+                val.linked_click_event.event_func();
+            }
+        });
+    }, false);
+}
+/**
+ * Indique le sprite de fond
+ *
+ * @param {Sprite} sprite Sprite de fond
+ */
 function setBackgroundTile(sprite) {
     background_tile = sprite;
 }
@@ -101,6 +119,11 @@ function moveScreen(dir) {
     console.log("Pos : ", show_grid_pos);
     refreshScreen(all_grids, show_grid_size, show_grid_pos);
 }
+/**
+ * Modifie la taille de la zone de jeu visible
+ *
+ * @param {number} updown
+ */
 function zoomScreen(updown) {
     switch (updown) {
         //SCALE DOWN
@@ -124,5 +147,5 @@ function zoomScreen(updown) {
     }
     refreshScreen(all_grids, show_grid_size, show_grid_pos);
 }
-export { refreshScreen, getMousePos, drawBackgroundGrid, initCanvas, show_grid_pos, show_grid_size, all_grids, moveScreen, interactible_canvas, zoomScreen, back_grid_ctx, setBackgroundTile, grid_size };
+export { refreshScreen, getMousePos, drawBackgroundGrid, initCanvas, show_grid_pos, show_grid_size, all_grids, moveScreen, interactible_canvas, zoomScreen, back_grid_ctx, setBackgroundTile, grid_size, initMouseDetect };
 //# sourceMappingURL=GameTools.js.map
