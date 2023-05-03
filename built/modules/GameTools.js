@@ -20,5 +20,12 @@ function getMousePos(canvas, evt) {
         y: (evt.clientY - rect.top) * scaleY, // been adjusted to be relative to element
     };
 }
-export { refreshScreen, getMousePos };
+function drawBackgroundGrid(zoom, sprite_tile, back_grid_ctx) {
+    for (let i = 0; i < zoom; i++) {
+        for (let j = 0; j < zoom; j++) {
+            sprite_tile.render([i * 3200 / zoom, j * 3200 / zoom], back_grid_ctx, zoom);
+        }
+    }
+}
+export { refreshScreen, getMousePos, drawBackgroundGrid };
 //# sourceMappingURL=GameTools.js.map

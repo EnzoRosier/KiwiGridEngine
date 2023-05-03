@@ -24,17 +24,17 @@ class Sprite {
      * @param {CanvasRenderingContext2D} ctx context2D
      * @memberof Sprite
      */
-    render(pos, ctx) {
+    render(pos, ctx, zoom) {
         // On check si l'image du Sprite est chargée par le navigateur
         if (this.img.complete) {
             // Si oui on affiche directement
-            ctx.drawImage(this.img, pos[0], pos[1], this.size_X * 10, this.size_Y * 10);
+            ctx.drawImage(this.img, pos[0], pos[1], 3200 / zoom, 3200 / zoom);
         }
         else {
             // Si non
             this.img.addEventListener("load", (event) => {
                 // On attend que l'image soit chargée
-                ctx.drawImage(this.img, pos[0], pos[1], this.size_X * 10, this.size_Y * 10);
+                ctx.drawImage(this.img, pos[0], pos[1], 3200 / zoom, 3200 / zoom);
             });
         }
     }
@@ -186,7 +186,8 @@ class SpriteManager {
      */
     render(ctx, pos) {
         if (this.curr_sprite != undefined) {
-            this.curr_sprite.render([pos[0] * 32 * 10, pos[1] * 32 * 10], ctx);
+            this.curr_sprite.render([pos[0] * 32 * 10, pos[1] * 32 * 10], ctx, 9 //TMP
+            );
         }
     }
     /**

@@ -2,6 +2,7 @@
 
 import { GameObject } from "./GameObjectClass";
 import { Grid } from "./Grid";
+import { Sprite } from "./Sprite"
 
 var dpi = window.devicePixelRatio;
 
@@ -29,5 +30,12 @@ function getMousePos(canvas, evt) {
     };
 }
 
+function drawBackgroundGrid(zoom: number, sprite_tile: Sprite, back_grid_ctx: CanvasRenderingContext2D) {
+    for (let i = 0; i < zoom; i++) {
+        for (let j = 0; j < zoom; j++) {
+            sprite_tile.render([i * 3200 / zoom, j * 3200 / zoom], back_grid_ctx, zoom);
+        }
+    }
+}
 
-export { refreshScreen, getMousePos };
+export { refreshScreen, getMousePos, drawBackgroundGrid };

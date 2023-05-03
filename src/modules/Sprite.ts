@@ -31,11 +31,11 @@ class Sprite {
      * @param {CanvasRenderingContext2D} ctx context2D
      * @memberof Sprite
      */
-    render(pos: number[], ctx: CanvasRenderingContext2D) {
+    render(pos: number[], ctx: CanvasRenderingContext2D, zoom: number) {
         // On check si l'image du Sprite est chargée par le navigateur
         if (this.img.complete) {
             // Si oui on affiche directement
-            ctx.drawImage(this.img, pos[0], pos[1], this.size_X * 10, this.size_Y * 10);
+            ctx.drawImage(this.img, pos[0], pos[1], 3200/zoom, 3200/zoom);
         } else {
             // Si non
             this.img.addEventListener("load", (event) => {
@@ -44,8 +44,8 @@ class Sprite {
                     this.img,
                     pos[0],
                     pos[1],
-                    this.size_X * 10,
-                    this.size_Y * 10
+                    3200/zoom,
+                    3200/zoom
                 );
             });
         }
@@ -245,7 +245,8 @@ class SpriteManager {
         if (this.curr_sprite != undefined) {
             this.curr_sprite.render(
                 [pos[0] * 32 * 10, pos[1] * 32 * 10],
-                ctx
+                ctx,
+                9 //TMP
             );
         }
     }

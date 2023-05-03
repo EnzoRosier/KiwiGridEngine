@@ -4,6 +4,7 @@ let interact_ctx = interactible_canvas.getContext("2d");
 interact_ctx.imageSmoothingEnabled = false;
 /**
  * Objet associant une zone du canvas interactible avec un effet
+ * (Affichage optionel)
  *
  * @export
  * @class ClickEvent

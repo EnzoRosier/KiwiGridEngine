@@ -2,7 +2,7 @@ export class Grid {
     constructor(grid_size) {
         this.grid_rows = grid_size[0];
         this.grid_columns = grid_size[1];
-        this.list_objects = [];
+        this.map_objects = new Map();
         this.grid_canvas = undefined;
         this.grid_ctx = undefined;
     }
@@ -16,9 +16,12 @@ export class Grid {
     }
     draw_grid() {
         this.grid_ctx.clearRect(0, 0, this.grid_canvas.width, this.grid_canvas.height);
-        this.list_objects.forEach(val => {
+        this.map_objects.forEach(val => {
             val.renderObject(this.grid_ctx);
         });
+    }
+    addObject(object) {
+        this.map_objects.set([object.pos_X, object.pos_Y], object);
     }
 }
 //# sourceMappingURL=Grid.js.map
